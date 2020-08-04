@@ -11,7 +11,7 @@ const translationPrefix = 'clarkwinkelmann-group-invitation.admin.settings.';
 
 export default class InviteModal extends Modal {
     className() {
-        return 'GroupInvitationSettingsModal';
+        return 'GroupInvitationSettingsModal Modal--large';
     }
 
     title() {
