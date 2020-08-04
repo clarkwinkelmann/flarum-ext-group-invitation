@@ -29,6 +29,9 @@
                 "backgroundColor": "#684ba6",
                 "color": "#fff"
             }
+        },
+        "flagrow": {
+            "discuss": "https://discuss.flarum.org/d/24627"
         }
     }
 }
