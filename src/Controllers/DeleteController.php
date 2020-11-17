@@ -4,17 +4,14 @@ namespace ClarkWinkelmann\GroupInvitation\Controllers;
 
 use ClarkWinkelmann\GroupInvitation\Invitation;
 use Flarum\Api\Controller\AbstractDeleteController;
-use Flarum\User\AssertPermissionTrait;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteController extends AbstractDeleteController
 {
-    use AssertPermissionTrait;
-
     protected function delete(ServerRequestInterface $request)
     {
-        $this->assertAdmin($request->getAttribute('actor'));
+        $request->getAttribute('actor')->assertAdmin();
 
         $id = Arr::get($request->getQueryParams(), 'id');
 

@@ -18,8 +18,8 @@ export default class InviteModal extends Modal {
         return app.translator.trans(translationPrefix + 'title');
     }
 
-    init() {
-        super.init();
+    oninit(vnode) {
+        super.oninit(vnode);
 
         this.invitations = null;
 
@@ -83,7 +83,7 @@ export default class InviteModal extends Modal {
                     ],
                     m('tr', [
                         m('td', m('em', app.translator.trans(translationPrefix + 'placeholder.code'))),
-                        m('td', GroupSelect.component({
+                        m('td', m(GroupSelect, {
                             onchange: value => {
                                 this.newInvitationGroupId = value;
                             },
@@ -92,9 +92,10 @@ export default class InviteModal extends Modal {
                         m('td', m('input.FormControl', {
                             type: 'number',
                             min: '0',
-                            onchange: m.withAttr('value', value => {
+                            onchange: event => {
+                                const value = event.target.value;
                                 this.newInvitationMaxUsage = value === '0' ? '' : value;
-                            }),
+                            },
                             value: this.newInvitationMaxUsage,
                             placeholder: app.translator.trans(translationPrefix + 'placeholder.usage'),
                         })),
@@ -106,7 +107,7 @@ export default class InviteModal extends Modal {
                                 app.request({
                                     method: 'POST',
                                     url: app.forum.attribute('apiUrl') + '/group-invitations',
-                                    data: {
+                                    body: {
                                         groupId: this.newInvitationGroupId,
                                         maxUsage: this.newInvitationMaxUsage,
                                     }

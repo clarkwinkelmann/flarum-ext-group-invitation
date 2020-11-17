@@ -11,8 +11,8 @@ import avatar from 'flarum/helpers/avatar';
 const translationPrefix = 'clarkwinkelmann-group-invitation.forum.';
 
 export default class SignUpPage extends Page {
-    init() {
-        super.init();
+    oninit(vnode) {
+        super.oninit(vnode);
 
         this.loading = false;
 
@@ -80,7 +80,7 @@ export default class SignUpPage extends Page {
                 a: m('a', {
                     onclick(event) {
                         event.preventDefault();
-                        app.modal.show(new LogInModal());
+                        app.modal.show(LogInModal);
                     },
                 })
             }) : app.translator.trans(translationPrefix + 'invitation.no-usages-left')),

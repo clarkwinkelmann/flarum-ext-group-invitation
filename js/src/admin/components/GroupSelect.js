@@ -1,20 +1,21 @@
 import app from 'flarum/app';
-import Component from 'flarum/Component';
 import Group from 'flarum/models/Group';
 import icon from 'flarum/helpers/icon';
 
 /* global m */
 
-export default class GroupSelect extends Component {
-    view() {
+export default class GroupSelect {
+    view(vnode) {
         const {
             onchange,
             value,
-        } = this.props;
+        } = vnode.attrs;
 
         return m('span.Select', [
             m('select.Select-input.FormControl', {
-                onchange: m.withAttr('value', onchange.bind(this)),
+                onchange: event => {
+                    onchange(event.target.value);
+                },
                 value,
             }, [
                 m('option', {

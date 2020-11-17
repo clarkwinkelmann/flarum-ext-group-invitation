@@ -5,7 +5,7 @@ import SettingsModal from './components/SettingsModal';
 import Invitation from '../common/Invitation';
 
 app.initializers.add('clarkwinkelmann-group-invitation', () => {
-    app.extensionSettings['clarkwinkelmann-group-invitation'] = () => app.modal.show(new SettingsModal());
+    app.extensionSettings['clarkwinkelmann-group-invitation'] = () => app.modal.show(SettingsModal);
 
     app.store.models['group-invitations'] = Invitation;
 
