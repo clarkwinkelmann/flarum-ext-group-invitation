@@ -1,9 +1,8 @@
-import {extend} from 'flarum/extend';
-import app from 'flarum/app';
+import {extend} from 'flarum/common/extend';
 import Invitation from '../common/Invitation';
 import GetRolePage from './components/GetRolePage';
 
-/* global m */
+/* global app, m */
 
 app.initializers.add('clarkwinkelmann-group-invitation', () => {
     app.store.models['group-invitations'] = Invitation;

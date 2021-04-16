@@ -1,8 +1,7 @@
-import app from 'flarum/app';
-import Group from 'flarum/models/Group';
-import icon from 'flarum/helpers/icon';
+import Group from 'flarum/common/models/Group';
+import icon from 'flarum/common/helpers/icon';
 
-/* global m */
+/* global app, m */
 
 export default class GroupSelect {
     view(vnode) {

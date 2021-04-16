@@ -1,12 +1,11 @@
-import app from 'flarum/app';
-import Page from 'flarum/components/Page';
-import Button from 'flarum/components/Button';
-import LoadingIndicator from 'flarum/components/LoadingIndicator';
-import GroupBadge from 'flarum/components/GroupBadge';
-import LogInModal from 'flarum/components/LogInModal';
-import avatar from 'flarum/helpers/avatar';
+import Page from 'flarum/common/components/Page';
+import Button from 'flarum/common/components/Button';
+import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import GroupBadge from 'flarum/common/components/GroupBadge';
+import LogInModal from 'flarum/forum/components/LogInModal';
+import avatar from 'flarum/common/helpers/avatar';
 
-/* global m */
+/* global app, m */
 
 const translationPrefix = 'clarkwinkelmann-group-invitation.forum.';
 

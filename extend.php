@@ -3,7 +3,6 @@
 namespace ClarkWinkelmann\GroupInvitation;
 
 use Flarum\Extend;
-use Illuminate\Contracts\Events\Dispatcher;
 
 return [
     (new Extend\Frontend('forum'))
@@ -24,7 +23,6 @@ return [
         ->post('/group-invitations/{code:[a-zA-Z0-9_-]+}/apply', 'group-invitation.apply', Controllers\ApplyController::class)
         ->delete('/group-invitations/{id:[0-9]+}', 'group-invitation.delete', Controllers\DeleteController::class),
 
-    function (Dispatcher $events) {
-        $events->subscribe(Access\InvitationPolicy::class);
-    },
+    (new Extend\Policy())
+        ->modelPolicy(Invitation::class, Access\InvitationPolicy::class),
 ];

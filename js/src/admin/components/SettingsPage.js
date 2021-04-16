@@ -1,23 +1,14 @@
-import app from 'flarum/app';
-import Modal from 'flarum/components/Modal';
-import Button from 'flarum/components/Button';
-import GroupBadge from 'flarum/components/GroupBadge';
-import LoadingIndicator from 'flarum/components/LoadingIndicator';
+import Button from 'flarum/common/components/Button';
+import GroupBadge from 'flarum/common/components/GroupBadge';
+import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import GroupSelect from './GroupSelect';
 
-/* global m */
+/* global app, m */
 
 const translationPrefix = 'clarkwinkelmann-group-invitation.admin.settings.';
 
-export default class InviteModal extends Modal {
-    className() {
-        return 'GroupInvitationSettingsModal Modal--large';
-    }
-
-    title() {
-        return app.translator.trans(translationPrefix + 'title');
-    }
-
+export default class SettingsPage extends ExtensionPage {
     oninit(vnode) {
         super.oninit(vnode);
 
@@ -35,7 +26,7 @@ export default class InviteModal extends Modal {
     }
 
     content() {
-        return m('.Modal-body', [
+        return m('.ExtensionPage-settings.GroupInvitationSettingsPage', m('.container', [
             m('table', [
                 m('thead', m('tr', [
                     m('th', app.translator.trans(translationPrefix + 'head.code')),
@@ -130,6 +121,6 @@ export default class InviteModal extends Modal {
                     ]),
                 ]),
             ]),
-        ]);
+        ]));
     }
 }

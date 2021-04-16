@@ -7,15 +7,20 @@
     "type": "flarum-extension",
     "license": "MIT",
     "require": {
-        "flarum/core": ">=0.1.0-beta.14 <0.1.0-beta.15"
+        "flarum/core": "^0.1.0-beta.16"
     },
     "authors": [
         {
             "name": "Clark Winkelmann",
             "email": "clark.winkelmann@gmail.com",
+            "homepage": "https://clarkwinkelmann.com/",
             "role": "Developer"
         }
     ],
+    "support": {
+        "source": "https://github.com/clarkwinkelmann/flarum-ext-author-change",
+        "forum": "https://discuss.flarum.org/d/24627"
+    },
     "autoload": {
         "psr-4": {
             "ClarkWinkelmann\\GroupInvitation\\": "src/"
@@ -24,6 +29,7 @@
     "extra": {
         "flarum-extension": {
             "title": "Group Invitation",
+            "category": "feature",
             "icon": {
                 "name": "fas fa-certificate",
                 "backgroundColor": "#684ba6",

@@ -25,13 +25,13 @@ class ApplyController implements RequestHandlerInterface
 
         if (!$invitation) {
             throw new ValidationException([
-                'code' => app(Translator::class)->trans('clarkwinkelmann-group-invitation.api.error.not-found'),
+                'code' => resolve(Translator::class)->trans('clarkwinkelmann-group-invitation.api.error.not-found'),
             ]);
         }
 
         if (!$invitation->hasUsagesLeft()) {
             throw new ValidationException([
-                'code' => app(Translator::class)->trans('clarkwinkelmann-group-invitation.api.error.no-usages-left'),
+                'code' => resolve(Translator::class)->trans('clarkwinkelmann-group-invitation.api.error.no-usages-left'),
             ]);
         }
 

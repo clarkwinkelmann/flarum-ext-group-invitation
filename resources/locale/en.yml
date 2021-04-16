@@ -21,7 +21,6 @@ clarkwinkelmann-group-invitation:
         permissions:
             use: Use group invitation links
         settings:
-            title: Group Invitation
             head:
                 code: Code
                 group: Group

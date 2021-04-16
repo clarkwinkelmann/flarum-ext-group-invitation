@@ -1,4 +1,4 @@
-import Model from 'flarum/Model';
+import Model from 'flarum/common/Model';
 
 export default class Invitation extends Model {
     code = Model.attribute('code');
