@@ -2,10 +2,12 @@
 
 namespace ClarkWinkelmann\GroupInvitation\Controllers;
 
+use ClarkWinkelmann\GroupInvitation\Events\UsedInvitation;
 use ClarkWinkelmann\GroupInvitation\Invitation;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use Flarum\Locale\Translator;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -14,6 +16,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class ApplyController implements RequestHandlerInterface
 {
+    protected $events;
+
+    public function __construct(Dispatcher $events)
+    {
+        $this->events = $events;
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $code = Arr::get($request->getQueryParams(), 'code');
@@ -44,6 +53,8 @@ class ApplyController implements RequestHandlerInterface
 
             $invitation->usage_count++;
             $invitation->save();
+
+            $this->events->dispatch(new UsedInvitation($actor, $invitation));
         }
 
         return new EmptyResponse();
