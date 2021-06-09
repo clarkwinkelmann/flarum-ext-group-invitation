@@ -4,8 +4,8 @@ namespace ClarkWinkelmann\GroupInvitation\Controllers;
 
 use ClarkWinkelmann\GroupInvitation\Invitation;
 use Flarum\Foundation\ValidationException;
+use Flarum\Http\RequestUtil;
 use Flarum\Locale\Translator;
-use Flarum\User\User;
 use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -35,10 +35,7 @@ class ApplyController implements RequestHandlerInterface
             ]);
         }
 
-        /**
-         * @var $actor User
-         */
-        $actor = $request->getAttribute('actor');
+        $actor = RequestUtil::getActor($request);
 
         $actor->assertCan('use', $invitation);
 

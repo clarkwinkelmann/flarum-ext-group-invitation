@@ -5,6 +5,7 @@ namespace ClarkWinkelmann\GroupInvitation;
 use Carbon\Carbon;
 use Flarum\Database\AbstractModel;
 use Flarum\Group\Group;
+use Illuminate\Database\Eloquent\Relations;
 
 /**
  * @property int $id
@@ -28,7 +29,7 @@ class Invitation extends AbstractModel
         'created_at' => 'datetime',
     ];
 
-    public function group()
+    public function group(): Relations\BelongsTo
     {
         return $this->belongsTo(Group::class);
     }

@@ -6,6 +6,7 @@ use ClarkWinkelmann\GroupInvitation\Invitation;
 use ClarkWinkelmann\GroupInvitation\Serializers\InvitationSerializer;
 use ClarkWinkelmann\GroupInvitation\Validators\InvitationValidator;
 use Flarum\Api\Controller\AbstractCreateController;
+use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,7 +29,7 @@ class StoreController extends AbstractCreateController
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
-        $request->getAttribute('actor')->assertAdmin();
+        RequestUtil::getActor($request)->assertAdmin();
 
         $data = $request->getParsedBody();
 

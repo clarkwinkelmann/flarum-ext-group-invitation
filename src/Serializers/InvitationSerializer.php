@@ -5,6 +5,7 @@ namespace ClarkWinkelmann\GroupInvitation\Serializers;
 use ClarkWinkelmann\GroupInvitation\Invitation;
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\GroupSerializer;
+use Tobscure\JsonApi\Relationship;
 
 class InvitationSerializer extends AbstractSerializer
 {
@@ -14,7 +15,7 @@ class InvitationSerializer extends AbstractSerializer
      * @param Invitation $invitation
      * @return array
      */
-    protected function getDefaultAttributes($invitation)
+    protected function getDefaultAttributes($invitation): array
     {
         $attributes = [
             'code' => $invitation->code,
@@ -33,7 +34,7 @@ class InvitationSerializer extends AbstractSerializer
         return $attributes;
     }
 
-    public function group($invitation)
+    public function group($invitation): ?Relationship
     {
         return $this->hasOne($invitation, GroupSerializer::class);
     }

@@ -8,7 +8,7 @@ use Flarum\User\User;
 
 class InvitationPolicy extends AbstractPolicy
 {
-    public function use(User $actor, Invitation $invitation)
+    public function use(User $actor, Invitation $invitation): bool
     {
         return $actor->hasPermission('clarkwinkelmann-group-invitation.use') && $invitation->hasUsagesLeft();
     }
