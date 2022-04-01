@@ -1,28 +1,29 @@
+import {Vnode} from 'mithril';
+import app from 'flarum/admin/app';
+import {ApiPayloadSingle} from 'flarum/common/Store';
 import Button from 'flarum/common/components/Button';
 import GroupBadge from 'flarum/common/components/GroupBadge';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import GroupSelect from './GroupSelect';
-
-/* global app, m */
+import Invitation from '../../common/Invitation';
 
 const translationPrefix = 'clarkwinkelmann-group-invitation.admin.settings.';
 
 export default class SettingsPage extends ExtensionPage {
-    oninit(vnode) {
+    invitations: Invitation[] | null = null;
+    newInvitationGroupId: string = '';
+    newInvitationMaxUsage: string = '';
+
+    oninit(vnode: Vnode) {
         super.oninit(vnode);
 
-        this.invitations = null;
-
-        app.store.find('group-invitations').then(invitations => {
+        app.store.find<Invitation[]>('group-invitations', {}).then(invitations => {
             this.invitations = invitations;
             m.redraw();
         });
 
         this.loading = false;
-
-        this.newInvitationGroupId = '';
-        this.newInvitationMaxUsage = '';
     }
 
     content() {
@@ -36,38 +37,42 @@ export default class SettingsPage extends ExtensionPage {
                 ])),
                 m('tbody', [
                     this.invitations === null ? m('tr', m('td', LoadingIndicator.component())) : [
-                        this.invitations.map((invitation, index) => m('tr', [
-                            m('td', m('a', {
-                                href: app.forum.attribute('baseUrl') + '/get-role/' + invitation.code(),
-                                target: '_blank',
-                            }, m('code', invitation.code()))),
-                            m('td', [
-                                GroupBadge.component({
-                                    group: invitation.group(),
-                                }),
-                                ' ',
-                                invitation.group().namePlural(),
-                            ]),
-                            m('td', invitation.usageCount() + '/' + (invitation.maxUsage() === null ? app.translator.trans(translationPrefix + 'unlimited') : invitation.maxUsage())),
-                            m('td', Button.component({
-                                className: 'Button Button--danger',
-                                onclick: () => {
-                                    this.loading = true;
+                        this.invitations.map((invitation, index) => {
+                            const group = invitation.group();
 
-                                    invitation.delete().then(() => {
-                                        this.loading = false;
+                            return m('tr', [
+                                m('td', m('a', {
+                                    href: app.forum.attribute('baseUrl') + '/get-role/' + invitation.code(),
+                                    target: '_blank',
+                                }, m('code', invitation.code()))),
+                                m('td', [
+                                    GroupBadge.component({
+                                        group,
+                                    }),
+                                    ' ',
+                                    group && group.namePlural(),
+                                ]),
+                                m('td', invitation.usageCount() + '/' + (invitation.maxUsage() === null ? app.translator.trans(translationPrefix + 'unlimited') : invitation.maxUsage())),
+                                m('td', Button.component({
+                                    className: 'Button Button--danger',
+                                    onclick: () => {
+                                        this.loading = true;
 
-                                        this.invitations.splice(index, 1);
-                                        m.redraw();
-                                    }).catch(e => {
-                                        this.loading = false;
-                                        m.redraw();
-                                        throw e;
-                                    });
-                                },
-                                loading: this.loading,
-                            }, app.translator.trans(translationPrefix + 'delete'))),
-                        ])),
+                                        invitation.delete().then(() => {
+                                            this.loading = false;
+
+                                            this.invitations!.splice(index, 1);
+                                            m.redraw();
+                                        }).catch(e => {
+                                            this.loading = false;
+                                            m.redraw();
+                                            throw e;
+                                        });
+                                    },
+                                    loading: this.loading,
+                                }, app.translator.trans(translationPrefix + 'delete'))),
+                            ]);
+                        }),
                         this.invitations.length === 0 ? m('tr.NoResultRow', m('td', {
                             colspan: 4,
                         }, m('em', app.translator.trans(translationPrefix + 'empty')))) : null,
@@ -75,7 +80,7 @@ export default class SettingsPage extends ExtensionPage {
                     m('tr', [
                         m('td', m('em', app.translator.trans(translationPrefix + 'placeholder.code'))),
                         m('td', m(GroupSelect, {
-                            onchange: value => {
+                            onchange: (value: string) => {
                                 this.newInvitationGroupId = value;
                             },
                             value: this.newInvitationGroupId,
@@ -83,8 +88,8 @@ export default class SettingsPage extends ExtensionPage {
                         m('td', m('input.FormControl', {
                             type: 'number',
                             min: '0',
-                            onchange: event => {
-                                const value = event.target.value;
+                            onchange: (event: Event) => {
+                                const value = (event.target as HTMLInputElement).value;
                                 this.newInvitationMaxUsage = value === '0' ? '' : value;
                             },
                             value: this.newInvitationMaxUsage,
@@ -95,7 +100,7 @@ export default class SettingsPage extends ExtensionPage {
                             onclick: () => {
                                 this.loading = true;
 
-                                app.request({
+                                app.request<ApiPayloadSingle>({
                                     method: 'POST',
                                     url: app.forum.attribute('apiUrl') + '/group-invitations',
                                     body: {
@@ -105,7 +110,7 @@ export default class SettingsPage extends ExtensionPage {
                                 }).then(data => {
                                     this.loading = false;
 
-                                    this.invitations.push(app.store.pushPayload(data));
+                                    this.invitations!.push(app.store.pushPayload(data));
                                     this.newInvitationGroupId = '';
                                     this.newInvitationMaxUsage = '';
                                     m.redraw();

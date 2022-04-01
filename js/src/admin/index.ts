@@ -1,7 +1,6 @@
+import app from 'flarum/admin/app';
 import Invitation from '../common/Invitation';
 import SettingsPage from './components/SettingsPage';
-
-/* global app */
 
 app.initializers.add('clarkwinkelmann-group-invitation', () => {
     app.store.models['group-invitations'] = Invitation;

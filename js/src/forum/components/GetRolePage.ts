@@ -1,23 +1,27 @@
+import {Vnode} from 'mithril';
+import app from 'flarum/forum/app';
 import Page from 'flarum/common/components/Page';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import GroupBadge from 'flarum/common/components/GroupBadge';
 import LogInModal from 'flarum/forum/components/LogInModal';
 import avatar from 'flarum/common/helpers/avatar';
-
-/* global app, m */
+import Invitation from '../../common/Invitation';
 
 const translationPrefix = 'clarkwinkelmann-group-invitation.forum.';
 
-export default class SignUpPage extends Page {
-    oninit(vnode) {
+export default class GetRolePage extends Page {
+    loading: boolean = false;
+    invitation: Invitation | null | false = null;
+
+    oninit(vnode: Vnode) {
         super.oninit(vnode);
 
         this.loading = false;
 
         this.invitation = null;
 
-        app.store.find('group-invitations', m.route.param('code'), {}, {
+        app.store.find<Invitation>('group-invitations', m.route.param('code'), {}, {
             errorHandler: () => {
                 this.invitation = false; // Not found
                 m.redraw();
@@ -36,21 +40,22 @@ export default class SignUpPage extends Page {
             ]);
         }
 
-        if (this.invitation === false) {
+        const user = app.session.user;
+        const group = this.invitation && this.invitation.group();
+
+        // There should always be a group relationship, but this is the easiest fail safe
+        if (this.invitation === false || !group) {
             return m('.GroupInvitationPage', [
                 m('h2', app.translator.trans(translationPrefix + 'generic-title')),
                 m('p', app.translator.trans(translationPrefix + 'invitation.not-found')),
             ]);
         }
 
-        const user = app.session.user;
-        const group = this.invitation.group();
-
         let userText;
         let disabled = true;
 
         if (user) {
-            if (user.groups().some(g => g.id() === group.id())) {
+            if ((user.groups() || []).some(g => g && g.id() === group.id())) {
                 userText = 'already-member';
             } else if (this.invitation.canUse()) {
                 userText = 'already-connected';
@@ -67,7 +72,7 @@ export default class SignUpPage extends Page {
                 group: group.namePlural(),
             })),
             m('.GroupInvitationSchema', [
-                avatar(user),
+                avatar(user as any), // Must cast to any because Flarum doesn't type-hint missing users
                 m('span.GroupInvitationPlus', '+'),
                 GroupBadge.component({
                     group,
@@ -77,7 +82,7 @@ export default class SignUpPage extends Page {
                 user,
                 group: m('span.group', group.namePlural()),
                 a: m('a', {
-                    onclick(event) {
+                    onclick(event: Event) {
                         event.preventDefault();
                         app.modal.show(LogInModal);
                     },
@@ -91,7 +96,7 @@ export default class SignUpPage extends Page {
                     this.loading = true;
 
                     app.request({
-                        url: app.forum.attribute('apiUrl') + '/group-invitations/' + this.invitation.code() + '/apply',
+                        url: app.forum.attribute('apiUrl') + '/group-invitations/' + (this.invitation as Invitation).code() + '/apply',
                         method: 'POST',
                     }).then(() => {
                         this.loading = false;
