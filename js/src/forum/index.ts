@@ -1,5 +1,6 @@
 import app from 'flarum/forum/app';
 import {extend} from 'flarum/common/extend';
+import ForumApplication from 'flarum/forum/ForumApplication';
 import Invitation from '../common/Invitation';
 import GetRolePage from './components/GetRolePage';
 
@@ -11,7 +12,7 @@ app.initializers.add('clarkwinkelmann-group-invitation', () => {
         component: GetRolePage,
     };
 
-    extend(app, 'mount', () => {
+    extend(ForumApplication.prototype, 'mount', () => {
         if (localStorage.getItem('groupInvitationSuccess')) {
             localStorage.removeItem('groupInvitationSuccess');
 
